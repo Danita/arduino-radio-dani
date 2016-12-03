@@ -1,9 +1,13 @@
 #include <ArdSim_Interface.h>
 #include <LiquidCrystal.h>
 #include <Encoder.h>
+#include <RBD_Timer.h>
+#include <RBD_Button.h>
 
 LiquidCrystal lcd(19, 18, 17, 16, 15, 14);
 Encoder enc(2,3);
+RBD::Button changeOverBtn(45);
+RBD::Button encModeToggleBtn(4);
 
 float Com1 = 130.00;
 float Com1st = 125.00;
@@ -14,6 +18,8 @@ float ADF = 630;
 int XPDR = 1200;
 
 int mode = 0;
+int encMode = 0;
+int lastEncVal = 0;
 
 //------------------------------------------
 void setup()  { 
@@ -29,13 +35,14 @@ void setup()  {
   pinMode(43, INPUT_PULLUP);
   pinMode(44, INPUT_PULLUP);
 
-  pinMode(45, INPUT_PULLUP);
-
+  changeOverBtn.setDebounceTimeout(10);
+  encModeToggleBtn.setDebounceTimeout(10);
+  
   lcd.begin(16, 2);
-  lcd.print("Hola");
+  lcd.print("Dani Multiradio");
   delay(1000);
   lcd.setCursor(0, 0);
-  lcd.print("    ");
+  lcd.print("                ");
 } 
 
 //------------------------------------------
@@ -48,13 +55,63 @@ void loop()   {
     mode = newMode;
     displayMode(mode);
   }
+
+  switch(mode) {
+    case 2:
+      if (NewData(1)) {
+        lcd.setCursor(0,1);
+        lcd.print(GetData(1)/100);
+      }
+      if (NewData(2)) {
+        lcd.setCursor(10,1);
+        lcd.print(GetData(2)/100);
+      }
+      /*
+      if (getEncDir() == -1) {
+        if (encMode == 0) {
+          SimInput(1);
+        } else {
+          SimInput(3);
+        }
+      } else if (getEncDir() == 1) {
+        if (encMode == 0) {
+          SimInput(2);
+        } else {
+          SimInput(4);
+        }
+      }
+*/
+      // Changeover TODO: debouncear
+      if (changeOverBtn.onPressed()) {
+        SimInput(5);
+      }
+      
+    break;
+  }
+
+  // Cambiar modo encoder
+  if (encModeToggleBtn.onPressed()) {
+    toggleEncMode();
+  }
   
-  lcd.setCursor(0, 1);
+  lcd.setCursor(10, 0);
   lcd.print(
-    String(digitalRead(45)) + 
+    String(encMode) +  ' ' +
     String(enc.read())
     );
 }      
+
+void toggleEncMode() {
+  if (encMode == 0) {
+    encMode = 1;
+  } else {
+    encMode = 0;
+  }
+}
+
+int getEncDir() {
+  return 0;
+}
 
 /**
  * Obtener el modo actual según el rotary switch
