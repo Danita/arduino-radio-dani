@@ -34,7 +34,7 @@ void setup()  {
   pinMode(42, INPUT_PULLUP);
   pinMode(43, INPUT_PULLUP);
   pinMode(44, INPUT_PULLUP);
-
+  
   changeOverBtn.setDebounceTimeout(10);
   encModeToggleBtn.setDebounceTimeout(10);
   
@@ -48,7 +48,7 @@ void setup()  {
 //------------------------------------------
 void loop()   { 
 
-//  ArdSimScan;  
+  ArdSimScan;  
 
   int newMode = getMode();
   if (newMode != mode) {
@@ -57,6 +57,8 @@ void loop()   {
   }
 
   switch(mode) {
+
+    // COM 1
     case 2:
       if (NewData(1)) {
         lcd.setCursor(0,1);
@@ -66,21 +68,21 @@ void loop()   {
         lcd.setCursor(10,1);
         lcd.print(GetData(2)/100);
       }
-      /*
-      if (getEncDir() == -1) {
-        if (encMode == 0) {
-          SimInput(1);
-        } else {
-          SimInput(3);
-        }
-      } else if (getEncDir() == 1) {
+      
+      if (getEncDir() == 1) {
         if (encMode == 0) {
           SimInput(2);
         } else {
           SimInput(4);
         }
+      } else if (getEncDir() == -1) {
+        if (encMode == 0) {
+          SimInput(1);
+        } else {
+          SimInput(3);
+        }
       }
-*/
+
       // Changeover TODO: debouncear
       if (changeOverBtn.onPressed()) {
         SimInput(5);
@@ -94,13 +96,18 @@ void loop()   {
     toggleEncMode();
   }
   
-  lcd.setCursor(10, 0);
-  lcd.print(
-    String(encMode) +  ' ' +
-    String(enc.read())
-    );
+//  lcd.setCursor (7, 0);
+//  lcd.print(String(encMode));
+//  lcd.setCursor (9, 0);
+//  lcd.print(String(getEncDir()));
+  lcd.setCursor (11, 0);
+  lcd.print(String(enc.read()));
+
 }      
 
+/**
+ * Alterna el modo del encoder entre 0 y 1
+ */
 void toggleEncMode() {
   if (encMode == 0) {
     encMode = 1;
@@ -109,8 +116,19 @@ void toggleEncMode() {
   }
 }
 
+/**
+ * Retorna la dirección del encoder (-1, 0, 1)
+ */
 int getEncDir() {
-  return 0;
+  int encVal = enc.read() / 2;
+  int ret = 0;  
+  if (encVal > lastEncVal) {
+    ret = 1;
+  } else if (encVal < lastEncVal) {
+    ret = -1;
+  }
+  lastEncVal = encVal;
+  return ret;
 }
 
 /**
@@ -118,28 +136,14 @@ int getEncDir() {
  */
 int getMode() {
   int mode = 999;
-  if (digitalRead(38) == 0) {
-    mode = 7;
-  } 
-  if (digitalRead(39) == 0) {
-    mode = 6;
-  } 
-  if (digitalRead(40) == 0) {
-    mode = 5;
-  } 
-  if (digitalRead(41) == 0) {
-    mode = 4;
-  } 
-  if (digitalRead(42) == 0) {
-    mode = 3;
-  } 
-  if (digitalRead(43) == 0) {
-    mode = 2;
-  }
-  if (digitalRead(44) == 0) {
-    mode = 1;
-  }
-  return mode;  
+  if (digitalRead(38) == 0) { mode = 7; } 
+  if (digitalRead(39) == 0) { mode = 6; } 
+  if (digitalRead(40) == 0) { mode = 5; } 
+  if (digitalRead(41) == 0) { mode = 4; } 
+  if (digitalRead(42) == 0) { mode = 3; } 
+  if (digitalRead(43) == 0) { mode = 2; }
+  if (digitalRead(44) == 0) { mode = 1; }
+  return mode;
 }
 
 /**
@@ -149,29 +153,14 @@ void displayMode(int mode) {
   lcd.clear();
   lcd.setCursor(0, 0);  
     switch(getMode()) {
-      case 1:
-        lcd.print("COM 2");    
-        break;
-      case 2:
-        lcd.print("COM 1");    
-        break;
-      case 3:
-        lcd.print("NAV 2");    
-        break;
-      case 4:
-        lcd.print("NAV 1");    
-        break;
-      case 5:
-        lcd.print("Transponder");    
-        break;
-      case 6:
-        lcd.print("ADF");    
-        break;
-      case 7:
-        lcd.print("DME");    
-        break;
-      default:
-        lcd.print("---INOP---");
-    }  
+      case 1: lcd.print("COM 2"); break;
+      case 2: lcd.print("COM 1"); break;
+      case 3: lcd.print("NAV 2"); break;
+      case 4: lcd.print("NAV 1"); break;
+      case 5: lcd.print("Transponder"); break;
+      case 6: lcd.print("ADF"); break;
+      case 7: lcd.print("DME"); break;
+      default: lcd.print("---INOP---");
+    }
 }
 
