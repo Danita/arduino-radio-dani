@@ -104,6 +104,11 @@ void loop()   {
       handleMode(Com1, 1, Com1st, 2, 1, 2, 3, 4, 5);
       break;
       
+    // NAV 2
+    case 3:
+      handleMode(Nav2, 7, Nav2st, 8, 16, 17, 18, 19, 20);
+      break;
+
     // NAV 1
     case 4:
       handleMode(Nav1, 5, Nav1st, 6, 6, 7, 8, 9, 10);
