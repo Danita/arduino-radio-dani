@@ -15,14 +15,14 @@
 const int PIN_ENC_A = 2;
 const int PIN_ENC_B = 3;
 const int PIN_ENC_MODE_BTN = 4;
-const int PIN_CO_BTN = 45;
-const int PIN_MODE_1 = 44;
-const int PIN_MODE_2 = 43;
-const int PIN_MODE_3 = 42;
-const int PIN_MODE_4 = 41;
-const int PIN_MODE_5 = 40;
-const int PIN_MODE_6 = 39;
-const int PIN_MODE_7 = 38;
+const int PIN_CO_BTN = 29;
+const int PIN_MODE_1 = 28;
+const int PIN_MODE_2 = 27;
+const int PIN_MODE_3 = 26;
+const int PIN_MODE_4 = 25;
+const int PIN_MODE_5 = 24;
+const int PIN_MODE_6 = 23;
+const int PIN_MODE_7 = 22;
 
 LiquidCrystal lcd(19, 18, 17, 16, 15, 14);
 Encoder enc(PIN_ENC_A, PIN_ENC_B);
