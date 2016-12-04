@@ -35,10 +35,10 @@ void displayMode(int mode) {
       case 2: lcd.print("COM 1"); break;
       case 3: lcd.print("NAV 2"); break;
       case 4: lcd.print("NAV 1"); break;
-      case 5: lcd.print("Transponder"); break;
+      case 5: lcd.print("XPDR"); break;
       case 6: lcd.print("ADF1"); break;
       case 7: lcd.print("ADF2"); break;
-      default: lcd.print("---INOP---");
+      default: lcd.print("-----=INOP=-----");
     }
 }
 

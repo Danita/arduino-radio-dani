@@ -2,8 +2,7 @@
  * Multi radio
  * Daniela Rodríguez Careri <dcareri@gmail.com>
  *  
- * @todo Initialize with sim values at startup
- * @todo Show which digits will the encoder affect
+ * @todo Initialize with sim values at startup 
  * @todo Show message while X-Plane is connecting because the device is unresponsive until then
  * @todo Add schematics to repo 
  */

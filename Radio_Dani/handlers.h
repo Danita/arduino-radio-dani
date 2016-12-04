@@ -27,19 +27,26 @@ void handleNavComMode(
     printFixedWidth(lcd, sbyVal, 5, 2);
 
     // According to encoder direction and mode, send commands to simulator
-    if (encDir == 1) {
-      if (encMode == 0) {
-        SimInput(sbyInputCoarseUp);
-      } else {
-        SimInput(sbyInputFineUp);
-      }
-    } else if (encDir == -1) {
-      if (encMode == 0) {
-        SimInput(sbyInputCoarseDn);
-      } else {
-        SimInput(sbyInputFineDn);
-      }
-    }
+    switch(encMode) {
+      case 0:
+        lcd.setCursor(10,0);
+        lcd.print("___   ");
+        if (encDir == 1) {
+          SimInput(sbyInputCoarseUp);
+        } else if (encDir == -1) {
+          SimInput(sbyInputCoarseDn);
+        }
+      break;
+      case 1:
+        lcd.setCursor(10,0);
+        lcd.print("    __");
+        if (encDir == 1) {
+          SimInput(sbyInputFineUp);
+        } else if (encDir == -1) {
+          SimInput(sbyInputFineDn);
+        }
+      break;
+    }   
 
     // If changeover pressed, send command to simulator
     if (changeOverBtn.onPressed()) {
@@ -82,7 +89,9 @@ void handleAdfMode(
 
     // According to encoder direction and mode, send commands to simulator
     switch(encMode) {
-      case 0:        
+      case 0:
+         lcd.setCursor(10,0);
+         lcd.print("_  ");
          if (encDir == 1) {            
             SimInput(sbyInput100up);
          } else if (encDir == -1) {
@@ -90,6 +99,8 @@ void handleAdfMode(
          }
       break;
       case 1:
+         lcd.setCursor(10,0);
+         lcd.print(" _ ");
          if (encDir == 1) {
             SimInput(sbyInput10up);
          } else if (encDir == -1) {
@@ -97,6 +108,8 @@ void handleAdfMode(
          }
       break;
       case 2:
+         lcd.setCursor(10,0);
+         lcd.print("  _");
          if (encDir == 1) {
             SimInput(sbyInput1up);
          } else if (encDir == -1) {
@@ -152,10 +165,14 @@ void handleXpdrMode(
       case 3:  lcd.print("ALT   "); break; // Docs says this is test 
       case 4:  lcd.print("TEST  "); break; // This is not on the docs
       default: lcd.print("???   "); break; // Unexpected value
-    }    
+    }
+    
+    
     // According to encoder direction and mode, send commands to simulator
     switch(encMode) {
-      case 0:        
+      case 0:
+         lcd.setCursor(10,0);
+         lcd.print("_   ");  
          if (encDir == 1) {            
             SimInput(tInput1000up);
          } else if (encDir == -1) {
@@ -163,6 +180,8 @@ void handleXpdrMode(
          }
       break;
       case 1:
+         lcd.setCursor(10,0);
+         lcd.print(" _  ");  
          if (encDir == 1) {
             SimInput(tInput100up);
          } else if (encDir == -1) {
@@ -170,6 +189,8 @@ void handleXpdrMode(
          }
       break;
       case 2:
+         lcd.setCursor(10,0);
+         lcd.print("  _ ");  
          if (encDir == 1) {
             SimInput(tInput10up);
          } else if (encDir == -1) {
@@ -177,6 +198,8 @@ void handleXpdrMode(
          }
       break;
       case 3:
+         lcd.setCursor(10,0);
+         lcd.print("   _");  
          if (encDir == 1) {
             SimInput(tInput1up);
          } else if (encDir == -1) {
