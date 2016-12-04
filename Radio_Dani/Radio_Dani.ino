@@ -60,7 +60,7 @@ void loop()   {
   }
 
   // Get encoder direction (-1, 0, +1)
-  int encVal = enc.read();
+  int encVal = enc.read() / 4;
   if (encVal > lastEncVal) {
     encDir = 1;
   } else if (encVal < lastEncVal) {
