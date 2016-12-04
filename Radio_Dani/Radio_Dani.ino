@@ -19,13 +19,14 @@ int XPDR = 1200;
 
 int mode = 0;
 int encMode = 0;
+int encDir = 0;
 int lastEncVal = 0;
 
 //------------------------------------------
 void setup()  { 
  
   BoardNumber 1;    
-  InputPin(NOINPUT);
+  InputPin(NOINPUT);  
 
   pinMode(38, INPUT_PULLUP);
   pinMode(39, INPUT_PULLUP);
@@ -50,32 +51,53 @@ void loop()   {
 
   ArdSimScan;  
 
+  // Mostrar modo de la radio (COM1, NAV1, etc.)
   int newMode = getMode();
   if (newMode != mode) {
     mode = newMode;
     displayMode(mode);
   }
 
+  // Obtener la dirección en que se está girando el encoder
+  int encVal = enc.read();
+  if (encVal > lastEncVal) {
+    encDir = 1;
+  } else if (encVal < lastEncVal) {
+    encDir = -1;
+  } else {
+    encDir = 0;
+  }
+
+  // Cambiar modo encoder al presionar el pulsador
+  if (encModeToggleBtn.onPressed()) {
+    toggleEncMode();
+  }
+  
   switch(mode) {
 
     // COM 1
     case 2:
+    
       if (NewData(1)) {
-        lcd.setCursor(0,1);
-        lcd.print(GetData(1)/100);
-      }
-      if (NewData(2)) {
-        lcd.setCursor(10,1);
-        lcd.print(GetData(2)/100);
+        Com1 = GetData(1)/100;
       }
       
-      if (getEncDir() == 1) {
+      if (NewData(2)) {
+        Com1st = GetData(2)/100;
+      }
+
+      lcd.setCursor(0,1);
+      lcd.print(Com1);
+      lcd.setCursor(10,1);
+      lcd.print(Com1st);
+      
+      if (encDir == 1) {
         if (encMode == 0) {
           SimInput(2);
         } else {
           SimInput(4);
         }
-      } else if (getEncDir() == -1) {
+      } else if (encDir == -1) {
         if (encMode == 0) {
           SimInput(1);
         } else {
@@ -83,7 +105,7 @@ void loop()   {
         }
       }
 
-      // Changeover TODO: debouncear
+      // Changeover
       if (changeOverBtn.onPressed()) {
         SimInput(5);
       }
@@ -91,18 +113,24 @@ void loop()   {
     break;
   }
 
-  // Cambiar modo encoder
-  if (encModeToggleBtn.onPressed()) {
-    toggleEncMode();
-  }
-  
-//  lcd.setCursor (7, 0);
-//  lcd.print(String(encMode));
-//  lcd.setCursor (9, 0);
-//  lcd.print(String(getEncDir()));
-  lcd.setCursor (11, 0);
-  lcd.print(String(enc.read()));
 
+  /*
+//  lcd.setCursor (4, 0);
+//  lcd.print("M" + String(encMode));
+  lcd.setCursor (4, 0);
+  lcd.print("D" + String(encDir));
+  lcd.setCursor (7, 0);
+  lcd.print("P" + String(lastEncVal));
+  lcd.setCursor (11, 0);
+  lcd.print("E" + String(encVal));
+  
+    
+  if (millis() % 10 == 0) {
+    lcd.clear();
+  }
+  */
+  
+  lastEncVal = encVal;
 }      
 
 /**
@@ -114,21 +142,6 @@ void toggleEncMode() {
   } else {
     encMode = 0;
   }
-}
-
-/**
- * Retorna la dirección del encoder (-1, 0, 1)
- */
-int getEncDir() {
-  int encVal = enc.read() / 2;
-  int ret = 0;  
-  if (encVal > lastEncVal) {
-    ret = 1;
-  } else if (encVal < lastEncVal) {
-    ret = -1;
-  }
-  lastEncVal = encVal;
-  return ret;
 }
 
 /**
