@@ -22,9 +22,9 @@ void handleNavComMode(
 
     // Display current values
     lcd.setCursor(0,1);
-    printFixedWidth(lcd, currentVal, 3, 2);
+    printFixedWidth(lcd, currentVal, 5, 2);
     lcd.setCursor(10,1);
-    printFixedWidth(lcd, sbyVal, 3, 2);
+    printFixedWidth(lcd, sbyVal, 5, 2);
 
     // According to encoder direction and mode, send commands to simulator
     if (encDir == 1) {
@@ -116,5 +116,92 @@ void handleAdfMode(
     }
 }
 
+
+/**
+ * Handle Transponder by displaying the current value,
+ * allowing to tune digits 1, 2 and 3, 4 separately
+ * and allowing to cycle the transponder mode
+ * (off, standby, ground, test)
+ */
+void handleXpdrMode(
+   int &currentVal, int currentOutput, 
+   int &modeVal, int modeOutput,
+   int tInput1000dn, int tInput1000up,
+   int tInput100dn, int tInput100up,
+   int tInput10dn, int tInput10up,
+   int tInput1dn, int tInput1up,
+   int mOffInput, int mSbyInput, int mOnInput, int mTestInput
+   ) {
+
+    // Update stored data from simulator
+    if (NewData(currentOutput)) {
+      currentVal = GetData(currentOutput);
+    }
+    if (NewData(modeOutput)) {
+      modeVal = GetData(modeOutput);
+    }
+
+    // Display current value
+    lcd.setCursor(0,1);
+    printFixedWidth(lcd, currentVal, 4, 0);
+    lcd.setCursor(10,1);
+    printFixedWidth(lcd, modeVal, 1, 0);
+
+    // According to encoder direction and mode, send commands to simulator
+    switch(encMode) {
+      case 0:        
+         if (encDir == 1) {            
+            SimInput(tInput1000up);
+         } else if (encDir == -1) {
+            SimInput(tInput1000dn);
+         }
+      break;
+      case 1:
+         if (encDir == 1) {
+            SimInput(tInput100up);
+         } else if (encDir == -1) {
+            SimInput(tInput100dn);
+         }
+      break;
+      case 2:
+         if (encDir == 1) {
+            SimInput(tInput10up);
+         } else if (encDir == -1) {
+            SimInput(tInput10dn);
+         }
+      break;
+      case 3:
+         if (encDir == 1) {
+            SimInput(tInput1up);
+         } else if (encDir == -1) {
+            SimInput(tInput1dn);
+         }
+      break;
+    }    
+
+    // Cycle transponder modes with the changeover button
+    if (changeOverBtn.onPressed()) {
+      if (modeVal == 0) {
+        SimInput(mSbyInput);
+      }
+      if (modeVal == 1) {
+        SimInput(mOnInput);
+      }
+      if (modeVal == 2) {
+        SimInput(mTestInput);
+      }
+      if (modeVal == 3) {
+        SimInput(mOffInput);
+      }
+      if (modeVal > 3) { // Failsafe for unexpected values
+        SimInput(mOffInput);
+      }
+    }
+
+    // Change encoder mode when button is pressed
+    if (encModeToggleBtn.onPressed()) {
+      toggleEncMode(3);
+    }
+}
 
 

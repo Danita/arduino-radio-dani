@@ -33,7 +33,8 @@ int Adf1 = 0;
 int Adf1st = 0;
 int Adf2 = 0;
 int Adf2st = 0;
-int XPDR = 0;
+int Xpdr = 0;
+int XpdrMode = 0;
 
 int mode = 0;
 int encMode = 0;
@@ -57,7 +58,7 @@ void setup()  {
   pinMode(PIN_MODE_6, INPUT_PULLUP);
   pinMode(PIN_MODE_7, INPUT_PULLUP);
   
-  changeOverBtn.setDebounceTimeout(10);
+  changeOverBtn.setDebounceTimeout(30);
   encModeToggleBtn.setDebounceTimeout(10);
   
   lcd.begin(16, 2);
@@ -110,16 +111,21 @@ void loop()   {
     // NAV 1
     case 4:
       handleNavComMode(Nav1, 5, Nav1st, 6, 6, 7, 8, 9, 10);
-      break;    
+      break;
+
+    // Transponder
+    case 5:
+      handleXpdrMode(Xpdr, 9, XpdrMode, 10, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46);
+      break;
 
     // ADF 1
     case 6:
-      handleAdfMode(Adf1, 10, Adf1st, 11, 21, 22, 23, 24, 25, 26, 27);
+      handleAdfMode(Adf1, 11, Adf1st, 12, 21, 22, 23, 24, 25, 26, 27);
       break;
 
     // ADF 2
     case 7:
-      handleAdfMode(Adf2, 12, Adf2st, 13, 28, 29, 30, 31, 32, 33, 34);
+      handleAdfMode(Adf2, 13, Adf2st, 14, 28, 29, 30, 31, 32, 33, 34);
       break;
       
   }

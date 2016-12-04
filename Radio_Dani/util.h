@@ -46,7 +46,7 @@ void displayMode(int mode) {
  * Print numbers on fixed width
  * @param out reference to print interface
  * @param in value to format
- * @param width number of integer digits
+ * @param width number of total digits
  * @param decimal number of decimal digits
  */
 void printFixedWidth(Print &out, float in, byte width, byte decimals){
