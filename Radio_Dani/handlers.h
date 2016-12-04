@@ -22,9 +22,9 @@ void handleNavComMode(
 
     // Display current values
     lcd.setCursor(0,1);
-    lcd.print(currentVal);
+    printFixedWidth(lcd, currentVal, 3, 2);
     lcd.setCursor(10,1);
-    lcd.print(sbyVal);
+    printFixedWidth(lcd, sbyVal, 3, 2);
 
     // According to encoder direction and mode, send commands to simulator
     if (encDir == 1) {
@@ -53,50 +53,62 @@ void handleNavComMode(
 }
 
 /**
- * Handle ADF mode, by displaying the current value
- * and allowing to tune each digit separately
- * (changeover button does nothing)
+ * Handle ADF mode, by displaying the current value,
+ * allowing to tune each digit separately
+ * and allowing to flip current and standby frequency
  */
 void handleAdfMode(
    int &currentVal, int currentOutput, 
-   int input100dn, int input100up,
-   int input10dn, int input10up,
-   int input1dn, int input1up   
+   int &sbyVal, int sbyOutput,
+   int sbyInput100dn, int sbyInput100up,
+   int sbyInput10dn, int sbyInput10up,
+   int sbyInput1dn, int sbyInput1up,
+   int coInput
    ) {
 
     // Update stored data from simulator
     if (NewData(currentOutput)) {
       currentVal = GetData(currentOutput);
-    } 
+    }
+    if (NewData(sbyOutput)) {
+      sbyVal = GetData(sbyOutput);
+    }
 
     // Display current value
     lcd.setCursor(0,1);
     printFixedWidth(lcd, currentVal, 3, 0);
+    lcd.setCursor(10,1);
+    printFixedWidth(lcd, sbyVal, 3, 0);
 
     // According to encoder direction and mode, send commands to simulator
     switch(encMode) {
       case 0:        
          if (encDir == 1) {            
-            SimInput(input100up);
+            SimInput(sbyInput100up);
          } else if (encDir == -1) {
-            SimInput(input100dn);
+            SimInput(sbyInput100dn);
          }
       break;
       case 1:
          if (encDir == 1) {
-            SimInput(input10up);
+            SimInput(sbyInput10up);
          } else if (encDir == -1) {
-            SimInput(input10dn);
+            SimInput(sbyInput10dn);
          }
       break;
       case 2:
          if (encDir == 1) {
-            SimInput(input1up);
+            SimInput(sbyInput1up);
          } else if (encDir == -1) {
-            SimInput(input1dn);
+            SimInput(sbyInput1dn);
          }
       break;
     }    
+
+    // If changeover pressed, send command to simulator
+    if (changeOverBtn.onPressed()) {
+      SimInput(coInput);
+    }
 
     // Change encoder mode when button is pressed
     if (encModeToggleBtn.onPressed()) {

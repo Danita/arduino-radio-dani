@@ -30,7 +30,9 @@ float Nav1st = 0;
 float Nav2 = 0;
 float Nav2st = 0;
 int Adf1 = 0;
+int Adf1st = 0;
 int Adf2 = 0;
+int Adf2st = 0;
 int XPDR = 0;
 
 int mode = 0;
@@ -111,7 +113,7 @@ void loop()   {
       break;
 
     case 6:
-      handleAdfMode(Adf1, 10, 21, 22, 23, 24, 25, 26);
+      handleAdfMode(Adf1, 10, Adf1st, 11, 21, 22, 23, 24, 25, 26, 27);
       break;
   }
   
