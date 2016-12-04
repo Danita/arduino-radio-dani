@@ -4,18 +4,30 @@
 #include <RBD_Timer.h>
 #include <RBD_Button.h>
 
-LiquidCrystal lcd(19, 18, 17, 16, 15, 14);
-Encoder enc(2,3);
-RBD::Button changeOverBtn(45);
-RBD::Button encModeToggleBtn(4);
+const int PIN_ENC_A = 2;
+const int PIN_ENC_B = 3;
+const int PIN_ENC_MODE_BTN = 4;
+const int PIN_CO_BTN = 45;
+const int PIN_MODE_1 = 44;
+const int PIN_MODE_2 = 43;
+const int PIN_MODE_3 = 42;
+const int PIN_MODE_4 = 41;
+const int PIN_MODE_5 = 40;
+const int PIN_MODE_6 = 39;
+const int PIN_MODE_7 = 38;
 
-float Com1 = 130.00;
-float Com1st = 125.00;
-float Nav1 = 109.25;
-float Nav1st = 110.05;
-float DME = 109.25;
-float ADF = 630;
-int XPDR = 1200;
+LiquidCrystal lcd(19, 18, 17, 16, 15, 14);
+Encoder enc(PIN_ENC_A, PIN_ENC_B);
+RBD::Button changeOverBtn(PIN_CO_BTN);
+RBD::Button encModeToggleBtn(PIN_ENC_MODE_BTN);
+
+float Com1 = 000.00;
+float Com1st = 000.00;
+float Nav1 = 000.00;
+float Nav1st = 000.00;
+float DME = 000.00;
+float ADF = 000;
+int XPDR = 0000;
 
 int mode = 0;
 int encMode = 0;
@@ -28,14 +40,13 @@ void setup()  {
   BoardNumber 1;    
   InputPin(NOINPUT);  
 
-  // TODO: make constants
-  pinMode(38, INPUT_PULLUP);
-  pinMode(39, INPUT_PULLUP);
-  pinMode(40, INPUT_PULLUP);
-  pinMode(41, INPUT_PULLUP);
-  pinMode(42, INPUT_PULLUP);
-  pinMode(43, INPUT_PULLUP);
-  pinMode(44, INPUT_PULLUP);
+  pinMode(PIN_MODE_1, INPUT_PULLUP);
+  pinMode(PIN_MODE_2, INPUT_PULLUP);
+  pinMode(PIN_MODE_3, INPUT_PULLUP);
+  pinMode(PIN_MODE_4, INPUT_PULLUP);
+  pinMode(PIN_MODE_5, INPUT_PULLUP);
+  pinMode(PIN_MODE_6, INPUT_PULLUP);
+  pinMode(PIN_MODE_7, INPUT_PULLUP);
   
   changeOverBtn.setDebounceTimeout(10);
   encModeToggleBtn.setDebounceTimeout(10);
@@ -53,7 +64,7 @@ void loop()   {
   ArdSimScan;  
 
   // Show radio mode (COM1, NAV1, etc.)
-  int newMode = getMode();
+  int newMode = readMode();
   if (newMode != mode) {
     mode = newMode;
     displayMode(mode);
@@ -115,24 +126,10 @@ void loop()   {
       
     break;
   }
-
-  /*
-//  lcd.setCursor (4, 0);
-//  lcd.print("M" + String(encMode));
-  lcd.setCursor (4, 0);
-  lcd.print("D" + String(encDir));
-  lcd.setCursor (7, 0);
-  lcd.print("P" + String(lastEncVal));
-  lcd.setCursor (11, 0);
-  lcd.print("E" + String(encVal));
-      
-  if (millis() % 10 == 0) {
-    lcd.clear();
-  }
-  */
   
   lastEncVal = encVal;
 }      
+
 
 /**
  * Togle encoder mode between 0 (coarse) and 1 (fine)
@@ -148,15 +145,15 @@ void toggleEncMode() {
 /**
  * Get the current radio mode according to the rotary switch
  */
-int getMode() {
+int readMode() {
   int mode = 999;
-  if (digitalRead(38) == 0) { mode = 7; } 
-  if (digitalRead(39) == 0) { mode = 6; } 
-  if (digitalRead(40) == 0) { mode = 5; } 
-  if (digitalRead(41) == 0) { mode = 4; } 
-  if (digitalRead(42) == 0) { mode = 3; } 
-  if (digitalRead(43) == 0) { mode = 2; }
-  if (digitalRead(44) == 0) { mode = 1; }
+  if (digitalRead(PIN_MODE_7) == 0) { mode = 7; } 
+  if (digitalRead(PIN_MODE_6) == 0) { mode = 6; } 
+  if (digitalRead(PIN_MODE_5) == 0) { mode = 5; } 
+  if (digitalRead(PIN_MODE_4) == 0) { mode = 4; } 
+  if (digitalRead(PIN_MODE_3) == 0) { mode = 3; } 
+  if (digitalRead(PIN_MODE_2) == 0) { mode = 2; }
+  if (digitalRead(PIN_MODE_1) == 0) { mode = 1; }
   return mode;
 }
 
@@ -166,7 +163,7 @@ int getMode() {
 void displayMode(int mode) {
   lcd.clear();
   lcd.setCursor(0, 0);  
-    switch(getMode()) {
+    switch(readMode()) {
       case 1: lcd.print("COM 2"); break;
       case 2: lcd.print("COM 1"); break;
       case 3: lcd.print("NAV 2"); break;
@@ -177,4 +174,5 @@ void displayMode(int mode) {
       default: lcd.print("---INOP---");
     }
 }
+
 
