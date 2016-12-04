@@ -110,11 +110,18 @@ void loop()   {
     // NAV 1
     case 4:
       handleNavComMode(Nav1, 5, Nav1st, 6, 6, 7, 8, 9, 10);
-      break;
+      break;    
 
+    // ADF 1
     case 6:
       handleAdfMode(Adf1, 10, Adf1st, 11, 21, 22, 23, 24, 25, 26, 27);
       break;
+
+    // ADF 2
+    case 7:
+      handleAdfMode(Adf2, 12, Adf2st, 13, 28, 29, 30, 31, 32, 33, 34);
+      break;
+      
   }
   
   lastEncVal = encVal;
