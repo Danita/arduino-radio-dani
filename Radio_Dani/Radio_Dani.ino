@@ -23,10 +23,14 @@ RBD::Button encModeToggleBtn(PIN_ENC_MODE_BTN);
 
 float Com1 = 000.00;
 float Com1st = 000.00;
+float Com2 = 000.00;
+float Com2st = 000.00;
 float Nav1 = 000.00;
 float Nav1st = 000.00;
-float DME = 000.00;
-float ADF = 000;
+float Nav2 = 000.00;
+float Nav2st = 000.00;
+float ADF1 = 000;
+float ADF2 = 000;
 int XPDR = 0000;
 
 int mode = 0;
@@ -90,10 +94,22 @@ void loop()   {
   
   switch(mode) {
 
+    // COM 2
+    case 1:
+      handleMode(Com2, 3, Com2st, 4, 11, 12, 13, 14, 15);
+      break; 
+
     // COM 1
     case 2:
       handleMode(Com1, 1, Com1st, 2, 1, 2, 3, 4, 5);
       break;
+      
+    // NAV 1
+    case 4:
+      handleMode(Nav1, 5, Nav1st, 6, 6, 7, 8, 9, 10);
+      break;
+
+     
   }
   
   lastEncVal = encVal;
