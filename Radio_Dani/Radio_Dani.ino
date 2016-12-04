@@ -28,6 +28,7 @@ void setup()  {
   BoardNumber 1;    
   InputPin(NOINPUT);  
 
+  // TODO: make constants
   pinMode(38, INPUT_PULLUP);
   pinMode(39, INPUT_PULLUP);
   pinMode(40, INPUT_PULLUP);
@@ -51,14 +52,14 @@ void loop()   {
 
   ArdSimScan;  
 
-  // Mostrar modo de la radio (COM1, NAV1, etc.)
+  // Show radio mode (COM1, NAV1, etc.)
   int newMode = getMode();
   if (newMode != mode) {
     mode = newMode;
     displayMode(mode);
   }
 
-  // Obtener la dirección en que se está girando el encoder
+  // Get encoder direction (-1, 0, +1)
   int encVal = enc.read();
   if (encVal > lastEncVal) {
     encDir = 1;
@@ -68,7 +69,7 @@ void loop()   {
     encDir = 0;
   }
 
-  // Cambiar modo encoder al presionar el pulsador
+  // Change encoder mode when button is pressed
   if (encModeToggleBtn.onPressed()) {
     toggleEncMode();
   }
@@ -77,20 +78,22 @@ void loop()   {
 
     // COM 1
     case 2:
-    
+
+      // Update stored data from simulator
       if (NewData(1)) {
         Com1 = GetData(1)/100;
       }
-      
       if (NewData(2)) {
         Com1st = GetData(2)/100;
       }
 
+      // Display current values
       lcd.setCursor(0,1);
       lcd.print(Com1);
       lcd.setCursor(10,1);
       lcd.print(Com1st);
-      
+
+      // According to radio mode and encoder mode, send commands to simulator
       if (encDir == 1) {
         if (encMode == 0) {
           SimInput(2);
@@ -105,14 +108,13 @@ void loop()   {
         }
       }
 
-      // Changeover
+      // If changeover pressed, send command to simulator
       if (changeOverBtn.onPressed()) {
         SimInput(5);
       }
       
     break;
   }
-
 
   /*
 //  lcd.setCursor (4, 0);
@@ -123,8 +125,7 @@ void loop()   {
   lcd.print("P" + String(lastEncVal));
   lcd.setCursor (11, 0);
   lcd.print("E" + String(encVal));
-  
-    
+      
   if (millis() % 10 == 0) {
     lcd.clear();
   }
@@ -134,7 +135,7 @@ void loop()   {
 }      
 
 /**
- * Alterna el modo del encoder entre 0 y 1
+ * Togle encoder mode between 0 (coarse) and 1 (fine)
  */
 void toggleEncMode() {
   if (encMode == 0) {
@@ -145,7 +146,7 @@ void toggleEncMode() {
 }
 
 /**
- * Obtener el modo actual según el rotary switch
+ * Get the current radio mode according to the rotary switch
  */
 int getMode() {
   int mode = 999;
@@ -160,7 +161,7 @@ int getMode() {
 }
 
 /**
- * Mostrar el modo especificado
+ * Show selected mode on screen
  */
 void displayMode(int mode) {
   lcd.clear();
