@@ -1,12 +1,12 @@
 /**
- * Togle encoder mode between 0 (coarse) and 1 (fine)
+ * Togle encoder mode between 0 and max
  */
-void toggleEncMode() {
-  if (encMode == 0) {
-    encMode = 1;
+void toggleEncMode(int max) {
+  if (encMode < max) {
+    encMode++;
   } else {
     encMode = 0;
-  }
+  }  
 }
 
 /**
@@ -36,8 +36,8 @@ void displayMode(int mode) {
       case 3: lcd.print("NAV 2"); break;
       case 4: lcd.print("NAV 1"); break;
       case 5: lcd.print("Transponder"); break;
-      case 6: lcd.print("ADF"); break;
-      case 7: lcd.print("DME"); break;
+      case 6: lcd.print("ADF1"); break;
+      case 7: lcd.print("ADF2"); break;
       default: lcd.print("---INOP---");
     }
 }
