@@ -142,11 +142,17 @@ void handleXpdrMode(
     }
 
     // Display current value
-    lcd.setCursor(0,1);
-    printFixedWidth(lcd, currentVal, 4, 0);
     lcd.setCursor(10,1);
-    printFixedWidth(lcd, modeVal, 1, 0);
-
+    printFixedWidth(lcd, currentVal, 4, 0);
+    lcd.setCursor(0,1);
+    switch(modeVal) {
+      case 0:  lcd.print("OFF   "); break;
+      case 1:  lcd.print("STBY  "); break;
+      case 2:  lcd.print("ON    "); break;
+      case 3:  lcd.print("ALT   "); break; // Docs says this is test 
+      case 4:  lcd.print("TEST  "); break; // This is not on the docs
+      default: lcd.print("???   "); break; // Unexpected value
+    }    
     // According to encoder direction and mode, send commands to simulator
     switch(encMode) {
       case 0:        
