@@ -42,47 +42,44 @@ void displayMode(int mode) {
     }
 }
 
-
+/**
+ * Print numbers on fixed width
+ * @param out reference to print interface
+ * @param in value to format
+ * @param width number of integer digits
+ * @param decimal number of decimal digits
+ */
 void printFixedWidth(Print &out, float in, byte width, byte decimals){
   float temp = in;
- 
-  //compensate for rounding if we don't want decimals
-  if(decimals == 0){
+  
+  if (decimals == 0){
     temp += 0.5;
   }
  
-  //do we need room for a minus?
-  if(in < 0){
+  if (in < 0){
     width--;
   }
  
-  //compensate for after the decimal and the decimal
   width -= decimals + 1;
  
-  //no room left?
-  if(width < 0){
+  if (width < 0){
     width = 0;
   }
  
-  //let's check width of variable efore decimal
-  while(temp > 10 && width){
+  while (temp > 10 && width){
     temp /= 10;
     width--;
   }
  
-  //now let's print it
-  //is it negative?
-  if(in < 0){
+  if (in < 0){
     out.print('-');
   }
  
-  //fill it up
-  while(width){
+  while (width){
     out.print('0');
     width--;
   }
  
-  //now print the number
   out.print(abs(in), decimals);
 }
 
