@@ -21,17 +21,17 @@ Encoder enc(PIN_ENC_A, PIN_ENC_B);
 RBD::Button changeOverBtn(PIN_CO_BTN);
 RBD::Button encModeToggleBtn(PIN_ENC_MODE_BTN);
 
-float Com1 = 000.00;
-float Com1st = 000.00;
-float Com2 = 000.00;
-float Com2st = 000.00;
-float Nav1 = 000.00;
-float Nav1st = 000.00;
-float Nav2 = 000.00;
-float Nav2st = 000.00;
-float ADF1 = 000;
-float ADF2 = 000;
-int XPDR = 0000;
+float Com1 = 0;
+float Com1st = 0;
+float Com2 = 0;
+float Com2st = 0;
+float Nav1 = 0;
+float Nav1st = 0;
+float Nav2 = 0;
+float Nav2st = 0;
+int Adf1 = 0;
+int Adf2 = 0;
+int XPDR = 0;
 
 int mode = 0;
 int encMode = 0;
@@ -110,7 +110,8 @@ void loop()   {
       handleNavComMode(Nav1, 5, Nav1st, 6, 6, 7, 8, 9, 10);
       break;
 
-    case 5:
+    case 6:
+      handleAdfMode(Adf1, 10, 21, 22, 23, 24, 25, 26);
       break;
   }
   
