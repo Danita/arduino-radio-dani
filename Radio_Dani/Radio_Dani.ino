@@ -4,7 +4,6 @@
  *  
  * @todo Initialize with sim values at startup 
  * @todo Show message while X-Plane is connecting because the device is unresponsive until then
- * @todo Add schematics to repo 
  */
 #include <ArdSim_Interface.h>
 #include <LiquidCrystal.h>
